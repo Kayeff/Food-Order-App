@@ -1,22 +1,24 @@
 import { useActionState } from "react";
-import { isEmail, validString } from "../input-validation";
+import { isEmail, validString } from "../utils/input-validation";
 import { twMerge } from "tailwind-merge";
+import Button from "./Button";
 
 function handleSubmitAction(prevState, formData) {
-  const fullName = formData.get("name");
+  const name = formData.get("name");
   const email = formData.get("email");
-  const streetAdd = formData.get("street");
+  const street = formData.get("street");
   const city = formData.get("city");
   const postCode = formData.get("postal-code");
+
   let errors = [];
 
-  if (!validString(fullName)) {
+  if (!validString(name)) {
     errors.push({ inputField: "name", errorText: "Invalid Full Name" });
   }
   if (!isEmail(email) && !validString(email)) {
     errors.push({ inputField: "email", errorText: "Email is not valid." });
   }
-  if (!validString(streetAdd)) {
+  if (!validString(street)) {
     errors.push({
       inputField: "street",
       errorText: "Invalid Street Address",
@@ -35,11 +37,7 @@ function handleSubmitAction(prevState, formData) {
   if (errors.length > 0) {
     return {
       errors: errors,
-      fullName,
-      email,
-      streetAdd,
-      city,
-      postCode,
+      enteredValues: { name, email, street, city, postCode },
     };
   }
 
@@ -90,7 +88,7 @@ export default function CheckoutForm({ handleClose }) {
             id="name"
             name="name"
             placeholder="Enter your full name"
-            defaultValue={formState?.fullName}
+            defaultValue={formState.enteredValues?.fullName}
             className={twMerge(
               "outline-0 p-2 tracking-tight border border-white/20 rounded-lg",
               invalidName && "border-red-500/90"
@@ -109,7 +107,7 @@ export default function CheckoutForm({ handleClose }) {
             id="email"
             name="email"
             placeholder="Enter your email"
-            defaultValue={formState?.email}
+            defaultValue={formState.enteredValues?.email}
             className={twMerge(
               "outline-0 p-2 tracking-tight border border-white/20 rounded-lg",
               invalidEmail && "border-red-500/90"
@@ -129,7 +127,7 @@ export default function CheckoutForm({ handleClose }) {
               id="street"
               name="street"
               placeholder="Ex. Midtown Manhattan"
-              defaultValue={formState?.streetAdd}
+              defaultValue={formState.enteredValues?.streetAdd}
               className={twMerge(
                 "outline-0 p-2 tracking-tight border border-white/20 rounded-lg ",
                 invalidStreet && "border-red-500/90"
@@ -150,7 +148,7 @@ export default function CheckoutForm({ handleClose }) {
               id="city"
               name="city"
               placeholder="Ex. New York City"
-              defaultValue={formState?.city}
+              defaultValue={formState.enteredValues?.city}
               className={twMerge(
                 "outline-0 p-2 tracking-tight border border-white/20 rounded-lg ",
                 invalidCity && "border-red-500/90"
@@ -171,7 +169,7 @@ export default function CheckoutForm({ handleClose }) {
               pattern="[0-9]{6}"
               maxLength={6}
               placeholder="Ex. 100001"
-              defaultValue={formState?.postCode}
+              defaultValue={formState.enteredValues?.postCode}
               className={twMerge(
                 "outline-0 p-2 tracking-tight border border-white/20 rounded-lg ",
                 invalidPostalCode && "border-red-500/90"
@@ -191,16 +189,16 @@ export default function CheckoutForm({ handleClose }) {
           "Please fill out all fields"}
       </h1>
       <div className="w-full flex items-center justify-end gap-2">
-        <button
-          type="button"
+        <Button
           onClick={handleClose}
-          className="p-3 rounded-md bg-transparent border-white/20 border text-white hover:border-white/40 text-sm tracking-tighter font-medium duration-300 cursor-pointer"
+          type="button"
+          className="bg-transparent border-white/20 border text-white hover:border-white/40"
         >
           Cancel Order
-        </button>
-        <button className="p-3 rounded-md bg-white/90 text-black text-sm tracking-tighter font-medium duration-300 disabled:opacity-40 disabled:cursor-not-allowed enabled:hover:bg-white cursor-pointer">
+        </Button>
+        <Button className="bg-white/90 text-black border-white/20 border hover:border-white/40 enabled:hover:bg-white">
           Submit Order
-        </button>
+        </Button>
       </div>
     </form>
   );

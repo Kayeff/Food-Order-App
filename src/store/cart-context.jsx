@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useReducer, useState } from "react";
 
 export const CartContext = createContext({
   cart: [],
@@ -6,63 +6,74 @@ export const CartContext = createContext({
   totalPrice: 0,
   addToCart: (meal) => {},
   removeFromCart: (id) => {},
-  updateCartQuantity: (id, doo) => {},
 });
 
+function reducerFunction(state, action) {
+  if (action.type === "ADD_ITEM") {
+    const existingItemID = state.items.findIndex(
+      (item) => item.id === action.payload.id
+    );
+
+    const updatedItems = [...state.items];
+
+    if (existingItemID !== -1) {
+      const existingItem = updatedItems[existingItemID];
+      updatedItems[existingItemID] = {
+        ...action.payload,
+        quantity: existingItem.quantity + 1,
+      };
+    } else {
+      updatedItems.push({ ...action.payload, quantity: 1 });
+    }
+
+    return { ...state, items: updatedItems };
+  }
+  if (action.type === "REMOVE_ITEM") {
+    const existingItemID = state.items.findIndex(
+      (item) => item.id === action.payload
+    );
+    if (existingItemID === -1) return state;
+
+    const updatedItems = [...state.items];
+    const existingItem = updatedItems[existingItemID];
+
+    if (existingItem.quantity === 1) {
+      updatedItems.splice(existingItemID, 1);
+    } else {
+      updatedItems[existingItemID] = {
+        ...existingItem,
+        quantity: existingItem.quantity - 1,
+      };
+    }
+    return { ...state, items: updatedItems };
+  }
+
+  return state;
+}
+
 export default function CartContextProvider({ children }) {
-  const [cart, setCart] = useState([]);
+  const [cartState, dispatch] = useReducer(reducerFunction, { items: [] });
 
   function addToCart(meal) {
-    const { id, price, name } = meal;
-    setCart((prev) => {
-      const existingItem = prev.find((item) => item.id === id);
-
-      if (existingItem) {
-        return prev.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity++ } : item
-        );
-      }
-
-      return [...prev, { id, price: Number(price), name, quantity: 1 }];
-    });
+    dispatch({ type: "ADD_ITEM", payload: meal });
   }
 
   function removeFromCart(id) {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+    dispatch({ type: "REMOVE_ITEM", payload: id });
   }
 
-  function updateCartQuantity(id, doo) {
-    if (doo === "+") {
-      setCart((prev) => {
-        return prev.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity++ } : item
-        );
-      });
-    } else if (doo === "-") {
-      setCart((prev) => {
-        return prev.map((item) => {
-          if (item.id === id) {
-            if (item.quantity === 0) {
-              removeFromCart(id);
-            }
-            return { ...item, quantity: item.quantity-- };
-          }
-          return item;
-        });
-      });
-    }
-  }
-
-  const totalItems = cart.reduce((a, c) => a + c.quantity, 0);
-  const totalPrice = cart.reduce((a, c) => a + c.price * c.quantity, 0);
+  const totalItems = cartState.items.reduce((a, c) => a + c.quantity, 0);
+  const totalPrice = cartState.items.reduce(
+    (a, c) => a + c.price * c.quantity,
+    0
+  );
 
   const ctxValue = {
-    cart,
+    items: cartState.items,
     totalItems,
     totalPrice,
     addToCart,
     removeFromCart,
-    updateCartQuantity,
   };
 
   return (
