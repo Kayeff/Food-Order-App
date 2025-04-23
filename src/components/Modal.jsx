@@ -5,14 +5,14 @@ import CartModal from "./CartModal";
 import { UIContext } from "../store/ui-context";
 
 export default function Modal() {
-  const { isCartVisible, isCheckoutVisible } = use(UIContext);
+  const { progress } = use(UIContext);
 
   return (
     <AnimatePresence>
-      {isCartVisible || isCheckoutVisible ? (
+      {progress !== "" ? (
         <div className="w-full min-h-screen bg-black/40 fixed inset-0 z-40 flex items-center justify-center">
-          {isCartVisible && <CartModal />}
-          {isCheckoutVisible && <CheckoutModal />}
+          {progress === "cart" && <CartModal />}
+          {progress === "checkout" && <CheckoutModal />}
         </div>
       ) : null}
     </AnimatePresence>

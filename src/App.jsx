@@ -7,13 +7,13 @@ import UIContextProvider from "./store/ui-context";
 export default function App() {
   return (
     <CartContextProvider>
-      <main className="w-full min-h-screen bg-black text-white font-inter relative flex flex-col gap-4">
-        <UIContextProvider>
+      <UIContextProvider>
+        <main className="w-full min-h-screen bg-black text-white font-inter relative flex flex-col gap-4">
           <Modal />
           <Header />
-        </UIContextProvider>
-        <Meals />
-      </main>
+          <Meals />
+        </main>
+      </UIContextProvider>
     </CartContextProvider>
   );
 }

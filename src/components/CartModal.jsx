@@ -9,7 +9,12 @@ import Button from "./Button";
 
 export default function CartModal() {
   const { items, totalItems, totalPrice } = use(CartContext);
-  const { hideCart, handleGotoCheckout } = use(UIContext);
+  const { hideCart, showCheckout } = use(UIContext);
+
+  function handleGotoCheckout() {
+    hideCart();
+    showCheckout();
+  }
 
   return (
     <div className="w-full min-h-screen bg-black/40 fixed inset-0 z-40 flex items-center justify-center">
