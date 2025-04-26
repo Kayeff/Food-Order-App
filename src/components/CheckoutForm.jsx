@@ -1,17 +1,13 @@
-import { use } from "react";
-import { UIContext } from "../store/ui-context";
 import Button from "./Button";
+import ErrorMessage from "./ErrorMessage";
 import Input from "./Input";
 
-export default function CheckoutForm() {
-  const { setProgress } = use(UIContext);
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const customerData = Object.fromEntries(formData);
-  }
-
+export default function CheckoutForm({
+  handleClose,
+  handleSubmit,
+  isLoading,
+  error,
+}) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-10 w-full">
       <div className="w-full grid grid-cols-2 gap-4">
@@ -58,26 +54,26 @@ export default function CheckoutForm() {
           />
         </div>
       </div>
-      {/* {error && (
+      {error && (
         <ErrorMessage
           title="Failed to submit order."
           message={error.message}
           meals={false}
         />
-      )} */}
+      )}
       <div className="w-full flex items-center justify-end gap-2">
         <Button
-          onClick={() => setProgress("")}
+          onClick={handleClose}
           type="button"
           className="bg-transparent border-white/20 border text-white hover:border-white/40"
         >
           Cancel Order
         </Button>
         <Button
-          type="submit"
+          disabled={isLoading}
           className="bg-white/90 text-black border-white/20 border hover:border-white/40 enabled:hover:bg-white"
         >
-          Submit Order
+          {isLoading ? "Submitting..." : "Submit Order"}
         </Button>
       </div>
     </form>

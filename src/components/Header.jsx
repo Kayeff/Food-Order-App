@@ -5,7 +5,7 @@ import { UIContext } from "../store/ui-context";
 
 export default function Header() {
   const { totalItems } = use(CartContext);
-  const { setProgress } = use(UIContext);
+  const { showCart } = use(UIContext);
 
   return (
     <header className="w-full flex items-center justify-center sticky top-0 bg-black border-b border-white/20 z-40">
@@ -14,7 +14,7 @@ export default function Header() {
           Food Order App
         </h1>
         <button
-          onClick={() => setProgress("cart")}
+          onClick={showCart}
           className="flex items-center justify-center cursor-pointer size-8 relative"
         >
           <img

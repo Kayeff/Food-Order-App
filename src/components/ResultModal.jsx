@@ -1,27 +1,20 @@
 import { motion } from "motion/react";
-import ModalHeader from "./ModalHeader";
-import { use } from "react";
-import { UIContext } from "../store/ui-context";
 
-export default function ResultModal() {
-  const { setProgress } = use(UIContext);
-
+export default function ResultModal({ handleClose }) {
   return (
-    <div className="w-full min-h-screen bg-black/40 fixed inset-0 z-40 flex items-center justify-center">
-      <motion.div
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -100 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="w-[40%] p-4 bg-black border border-white/20 rounded-xl flex flex-col gap-6"
-      >
-        <ModalHeader handleClose={() => setProgress("")}>Success!</ModalHeader>
-        <div className="flex flex-col items-end">
-          <h1 className="tracking-tighter flex gap-2 text-lg font-medium">
-            Order Submitted
-          </h1>
-        </div>
-      </motion.div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -100 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="w-[40%] p-4 bg-black border border-white/20 rounded-xl flex flex-col gap-6"
+    >
+      <ModalHeader handleClose={handleClose}>Success!</ModalHeader>
+      <div className="flex flex-col items-end">
+        <h1 className="tracking-tighter flex gap-2 text-lg font-medium">
+          Order Submitted
+        </h1>
+      </div>
+    </motion.div>
   );
 }

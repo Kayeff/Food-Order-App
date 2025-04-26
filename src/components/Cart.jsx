@@ -1,54 +1,59 @@
-import { RiAddLine, RiSubtractLine } from "@remixicon/react";
 import { use } from "react";
-import { CartContext } from "../store/cart-context";
+import ProgressModal from "./ProgressModal";
+import Display from "./Display";
 import { formatValue } from "../utils/value-formatter";
 import Button from "./Button";
+import { CartContext } from "../store/cart-context";
+import { UIContext } from "../store/ui-context";
 
-export default function Cart({}) {
-  const { items, addToCart, removeFromCart } = use(CartContext);
+export default function Cart() {
+  const { progress, hideCart, showCheckout } = use(UIContext);
+  const { items, totalItems, totalPrice } = use(CartContext);
+
+  function handleClose() {
+    hideCart();
+  }
+
+  function handleGoToCheckout() {
+    showCheckout();
+  }
 
   return (
-    <ul className="w-full grid grid-cols-3 gap-2">
-      {items.map((item) => (
-        <li
-          key={item.id}
-          className="border border-white/20 p-2 flex gap-2 rounded-xl"
+    <ProgressModal
+      show={progress === "cart"}
+      handleClose={handleClose}
+      header={
+        <>
+          Cart ( <span>{totalItems} items</span> )
+        </>
+      }
+      className="w-[65%]"
+    >
+      <div className="w-full">
+        {items.length > 0 ? (
+          <Display />
+        ) : (
+          <h1 className="text-white/50 text-sm">Please add items to cart</h1>
+        )}
+      </div>
+      {totalItems !== 0 && (
+        <div className="flex flex-col items-end">
+          <h1 className="tracking-tighter flex gap-2 text-lg font-medium">
+            <span>Subtotal ( {totalItems} items )</span>
+            <span>:</span>
+            <span>{formatValue(totalPrice)}</span>
+          </h1>
+        </div>
+      )}
+      <div className="w-full flex items-center justify-end gap-2">
+        <Button
+          disabled={items.length === 0}
+          onClick={handleGoToCheckout}
+          className="bg-white/90 text-black"
         >
-          <img
-            className="size-40 object-cover rounded-xl"
-            src={`http://localhost:3000/${item.image}`}
-            alt=""
-          />
-          <div className="w-full p-2 flex flex-col gap-2">
-            <h1 className="w-full flex flex-col tracking-tighter">
-              <span className="text-2xl font-medium">{item.name}</span>
-              <span className="tracking-tighter text-white/80">
-                {formatValue(item.price)}
-              </span>
-            </h1>
-            <p className="tracking-tighter text-center flex items-center gap-4">
-              <span>Quantity: </span>
-              <span className="grid grid-cols-3 gap-2 items-center">
-                <Button
-                  onClick={() => removeFromCart(item.id)}
-                  className="bg-white/90 hover:bg-white text-black rounded-full flex items-center justify-cener p-0.5"
-                >
-                  <RiSubtractLine size={17} />
-                </Button>
-                <span>{item.quantity}</span>
-                <Button
-                  onClick={() => addToCart(item)}
-                  className=" bg-white/90 hover:bg-white
-                  text-black rounded-full flex items-center
-                  justify-cener p-0.5"
-                >
-                  <RiAddLine size={17} />
-                </Button>
-              </span>
-            </p>
-          </div>
-        </li>
-      ))}
-    </ul>
+          Go to checkout
+        </Button>
+      </div>
+    </ProgressModal>
   );
 }
