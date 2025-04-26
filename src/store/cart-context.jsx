@@ -1,7 +1,7 @@
 import { createContext, useReducer, useState } from "react";
 
 export const CartContext = createContext({
-  cart: [],
+  items: [],
   totalItems: 0,
   totalPrice: 0,
   addToCart: (meal) => {},

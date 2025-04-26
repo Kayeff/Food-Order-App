@@ -34,7 +34,7 @@ export default function MealCard({ meal }) {
       <div className="w-full flex items-center justify-end p-4 mt-auto">
         <Button
           onClick={handleAddToCart}
-          className="bg-white/90 hover:bg-white text-black"
+          className="bg-white/90 text-black hover:bg-white"
         >
           Add to Cart
         </Button>

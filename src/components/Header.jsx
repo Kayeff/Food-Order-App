@@ -5,16 +5,16 @@ import { UIContext } from "../store/ui-context";
 
 export default function Header() {
   const { totalItems } = use(CartContext);
-  const { showCart } = use(UIContext);
+  const { setProgress } = use(UIContext);
 
   return (
-    <header className="w-full flex items-center justify-center sticky top-0 bg-black border-b border-white/20">
+    <header className="w-full flex items-center justify-center sticky top-0 bg-black border-b border-white/20 z-40">
       <div className="w-[70%] flex items-center justify-between p-4">
         <h1 className="tracking-tighter font-medium text-3xl">
           Food Order App
         </h1>
         <button
-          onClick={showCart}
+          onClick={() => setProgress("cart")}
           className="flex items-center justify-center cursor-pointer size-8 relative"
         >
           <img

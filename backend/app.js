@@ -65,7 +65,7 @@ app.use((req, res) => {
     return res.sendStatus(200);
   }
 
-  res.status(404).json({ message: "Not found" });
+  res.status(404).json({ message: "URL not found" });
 });
 
 app.listen(3000);
