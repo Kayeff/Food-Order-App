@@ -6,8 +6,6 @@ export const UIContext = createContext({
   hideCart: () => {},
   showCheckout: () => {},
   hideCheckout: () => {},
-  showResult: () => {},
-  hideResult: () => {},
 });
 
 export default function UIContextProvider({ children }) {
@@ -33,24 +31,12 @@ export default function UIContextProvider({ children }) {
     }
   }
 
-  function showResult() {
-    setUserProgress("result");
-  }
-
-  function hideResult() {
-    if (userProgress === "result") {
-      setUserProgress("");
-    }
-  }
-
   const ctxValue = {
     progress: userProgress,
     showCart,
     hideCart,
     showCheckout,
     hideCheckout,
-    showResult,
-    hideResult,
   };
   return <UIContext.Provider value={ctxValue}>{children}</UIContext.Provider>;
 }

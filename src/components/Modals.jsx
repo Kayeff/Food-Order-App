@@ -9,7 +9,7 @@ export default function Modals() {
   return (
     <AnimatePresence>
       {progress !== "" ? (
-        <div className="w-full min-h-screen bg-black/60 fixed inset-0 z-50 flex items-center justify-center">
+        <div className="w-full min-h-screen bg-black/60 fixed inset-0 z-50">
           <Cart />
           <Checkout />
         </div>
